@@ -1,0 +1,51 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+.macroDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+.accountErrorMsg {
+  position: absolute;
+  height: 100px;
+  width: 350px;
+  top: 50%;
+  left: 50%;
+  background-color: crimson;
+}
+
+.accountErrorTxt {
+  position: relative;
+  top: 75%;
+  left: 29%;
+  font-family: sans-serif;
+}
+
+.accountErrorClose {
+  position: relative;
+  top: 2px;
+  left: 47%;
+  background-color: darkred;
+}
+
+.addDiv {
+  align-self: center;
+}
+.proveDiv {
+  align-self: center;
+}
+.accountDiv {
+  align-self: center;
+}
+
+.accountField {
+  width: 250px;
+  margin-right: 5px;
+}
+
+.logBtn {
+  width: 45px;
+}

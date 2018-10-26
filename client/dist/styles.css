@@ -3,49 +3,73 @@ body {
   color: white;
 }
 
-.macroDiv {
-  display: flex;
-  flex-direction: column;
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
 }
 
-.accountErrorMsg {
+input[readonly].form-control {
+  background-color: white;
+  cursor: text !important;
+}
+
+input[readonly].form-control:disabled {
+  background-color: #f3f3f3;
+  cursor: text !important;
+}
+
+#circle {
   position: absolute;
-  height: 100px;
-  width: 350px;
   top: 50%;
   left: 50%;
-  background-color: crimson;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
 }
 
-.accountErrorTxt {
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 68%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+  display: block;
   position: relative;
-  top: 75%;
-  left: 29%;
-  font-family: sans-serif;
+  float: right;
+  bottom: 34px;
+  right: 160px;
 }
 
-.accountErrorClose {
-  position: relative;
-  top: 2px;
-  left: 47%;
-  background-color: darkred;
+.no-loader {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
-.addDiv {
-  align-self: center;
-}
-.proveDiv {
-  align-self: center;
-}
-.accountDiv {
-  align-self: center;
-}
-
-.accountField {
-  width: 250px;
-  margin-right: 5px;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.logBtn {
-  width: 45px;
+.fixed-input {
+  width: 400px;
+}
+
+.fixed-button {
+  width: 200px;
 }

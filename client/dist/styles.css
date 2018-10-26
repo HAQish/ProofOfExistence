@@ -1,8 +1,3 @@
-body {
-  background-color: black;
-  color: white;
-}
-
 .btn-file input[type=file] {
   position: absolute;
   top: 0;
@@ -16,6 +11,10 @@ body {
   background: red;
   cursor: inherit;
   display: block;
+}
+
+body /deep/ input[type="button"] {
+  box-sizing: unset;
 }
 
 input[readonly].form-control {
@@ -48,7 +47,7 @@ input[readonly].form-control:disabled {
   position: relative;
   float: right;
   bottom: 34px;
-  right: 160px;
+  right: 12%;
 }
 
 .no-loader {
@@ -72,4 +71,12 @@ input[readonly].form-control:disabled {
 
 .fixed-button {
   width: 200px;
+}
+
+.logger {
+  margin-top: 150px;
+}
+
+.toastSmallText {
+  font-size: 11px;
 }

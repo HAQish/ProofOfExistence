@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class UploadFile extends React.Component {
   constructor(props) {
@@ -11,6 +13,8 @@ class UploadFile extends React.Component {
     //bindings
     this.file = this.file.bind(this);        
     this.addToBlockchain = this.addToBlockchain.bind(this);      
+    this.createToastError = this.createToastError.bind(this);
+    this.createToastSuccess = this.createToastSuccess.bind(this);
   }
   //functions
 
@@ -32,10 +36,37 @@ class UploadFile extends React.Component {
     this.props.web3.eth.getAccounts((err, accounts) => {
       let account = accounts[0];
       this.setState({spinner: true});
-      this.props.contract.methods.add(newHash).send({ from: account }).then(results => {
+      this.props.contract.methods.add(newHash).send({ from: account }).catch(error => {
+        console.log("catch in addToBC", error);
+        this.setState({spinner: false});
+        this.createToastError();
+      }).then(results => {
         console.log("addResult", results);
         this.setState({spinner: false});
+        this.createToastSuccess(results);
       });
+    });
+  }
+
+  createToastError() {
+    toast.error('Transaction denied by user.', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    });
+  }
+
+  createToastSuccess(results) {
+    toast.success(`Block ${results.blockNumber} added to blockchain!`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
     });
   }
 
@@ -44,7 +75,7 @@ class UploadFile extends React.Component {
     const spinnerDiv = this.state.spinner ? <div className="loader" /> : <div className="no-loader" />;
     return (
       <div className="container mb-6">
-        <div className="col-md-9">
+        <div className="col-md-10">
           <div className="input-group">
             <span className="input-group-btn">
               <span className="btn btn-primary btn-file fixed-button">
@@ -64,6 +95,7 @@ class UploadFile extends React.Component {
           </div>
         </div>
           {spinnerDiv}
+          <ToastContainer />
       </div>
     )
   }

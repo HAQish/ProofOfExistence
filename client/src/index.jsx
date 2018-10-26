@@ -6,6 +6,8 @@ import abiArr from "./abi.json";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UploadFile from "./components/UploadFile.jsx";
 import ProveFile from "./components/ProveFile.jsx";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class App extends React.Component {
     }
     //bindings go here
     this.logWeb = this.logWeb.bind(this);
+    this.showFileToasts = this.showFileToasts.bind(this);
     this.setupContract();
   }
 
@@ -36,26 +39,43 @@ class App extends React.Component {
     this.state.contract = proofContract;
   }
 
+  showFileToasts(results) {
+    for (let i = 0; i < results[0].length; i++) {
+      let str = `Hash: ${results[0][i].slice(0, 20)}...${results[0][i].slice(-20)}\n
+      Uploaded at: ${results[1][i]}`;
+      toast.info(str, {
+        position: "top-right",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        bodyClassName: "toastSmallText"
+      });
+    }
+  }
+
   logWeb() {
-    this.state.contract.methods.logFiles().call().then(results => console.log("logFiles", results));
-    this.state.contract.methods.numberOfFiles().call().then(results => console.log("numberOfFiles", results));
-    this.state.contract.methods.latestFile().call().then(results => console.log("latestFile", results));
+    this.state.contract.methods.logFiles().call().then(results => this.showFileToasts(results));
+    // this.state.contract.methods.numberOfFiles().call().then(results => console.log("numberOfFiles", results));
+    // this.state.contract.methods.latestFile().call().then(results => console.log("latestFile", results));
   }
 
   render() {
     return (
       <div className="container">
         <h1>Proof of Existence</h1>
-        <div className="col-md-9 jumbotron">
+        <div className="col-md-11 jumbotron">
           <div className="row">
             <UploadFile contract={this.state.contract} web3={web3}/>
 
           </div>
           <div className="row">
             <ProveFile contract={this.state.contract} web3={web3}/>
-            
           </div>
-          <button onClick={this.logWeb} className="btn btn-primary">Log</button>
+            
+          <button onClick={this.logWeb} className="btn btn-primary logger">Log Files</button>
+          <ToastContainer />
         </div>
       </div>
     )
@@ -64,41 +84,9 @@ class App extends React.Component {
 
 ReactDOM.render(<App />, document.querySelector("#app"));
 
-//bytes32 means hex, but not necessarily regular string
 
-/*
-
-pragma solidity ^0.4.25;
-contract ProofOfExistence {
-    //no constructor
-
-    struct Filestruct {
-        bytes32 hash;
-        uint timestamp;
-    }
-
-    Filestruct[] files;
-
-    //var files = [{File structure}]
-
-    //add and prove
-
-    function add(bytes32 _hash) public returns (bool) {
-
-        for (uint i = 0; i < files.length; i++) {
-            if (files[i].hash == _hash) return false;
-        }
-
-        files.push(Filestruct(_hash, now));
-
-        return true;
-    }
-
-    function prove(bytes32 _hash) public view returns (uint) {
-        for (uint i = 0; i < files.length; i++) {
-            if (files[i].hash == _hash) return files[i].timestamp;
-        }
-        revert();
-    }
-}
-*/
+//upload proof of existence fix maybe
+//add toast notification on successful mine, possibly other confirmation
+//error handling on metamask rejection
+//instead of log, show stats => total uploaded, last upload time, contract link to etherscan
+  //large, blue, different font

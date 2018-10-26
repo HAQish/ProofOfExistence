@@ -1,5 +1,6 @@
 import React from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class ProveFile extends React.Component {
   constructor(props) {
     super(props);
@@ -9,6 +10,7 @@ class ProveFile extends React.Component {
     //bindings
     this.file = this.file.bind(this);
     this.proveInBlockchain = this.proveInBlockchain.bind(this);
+    this.showFileStatusToast = this.showFileStatusToast.bind(this);
   }
   //functions
 
@@ -21,7 +23,6 @@ class ProveFile extends React.Component {
     reader.onload = (event) => {
       let charArr = new TextEncoder('utf-8').encode(event.target.result);
       let hash = this.props.web3.utils.sha3(charArr);
-      console.log(hash);
       this.proveInBlockchain(hash);
     };
   }
@@ -29,15 +30,37 @@ class ProveFile extends React.Component {
   proveInBlockchain(hash) {
     this.props.web3.eth.getAccounts((err, accountsArr) => {
       let account = accountsArr[0];
-      this.props.contract.methods.prove(hash).call({ from: account }).then(results => console.log(results));
+      this.props.contract.methods.prove(hash).call({ from: account }).then(r => this.showFileStatusToast(r));
     });
+  }
+
+  showFileStatusToast(status) {
+    if (status === "File exists!") {
+      toast.info('File confirmed!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    } else {
+      toast.error('File not in collection.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    }
   }
 
 
   render() {
     return (
       <div className="container">
-        <div className="col-md-9">
+        <div className="col-md-10">
           <div className="input-group">
             <span className="input-group-btn">
               <span className="btn btn-primary btn-file fixed-button">
@@ -51,6 +74,7 @@ class ProveFile extends React.Component {
             <input type="text" className="form-control fixed-input" readOnly value={this.state.uploadFile} />
           </div>
         </div>
+        <ToastContainer />
       </div>
     )
   }
